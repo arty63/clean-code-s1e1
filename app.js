@@ -11,8 +11,7 @@
 const taskInput = document.querySelector('.row__new-task');//Add a new task.
 const addButton = document.querySelector('.button_add');//first button
 const incompleteTaskHolder = document.querySelector('.todo .list');//ul of #incompleteTasks
-const completedTasksHolder = document.querySelector('.comlited .list');//completed-tasks
-
+const completedTasksHolder = document.querySelector('.complited .list');//completed-tasks
 
 //New task list item
 const createNewTaskElement = function(taskString){
@@ -45,9 +44,9 @@ const createNewTaskElement = function(taskString){
   editInput.type = 'text';
 
   editButton.innerText = 'Edit'; //innerText encodes special characters, HTML does not.
-  editButton.classList.add('button');
+  editButton.classList.add('button', 'button_edit');
 
-  deleteButton.classList.add('button');
+  deleteButton.classList.add('button', 'button_del');
   deleteButtonImg.classList.add('button__img');
   deleteButtonImg.src = './remove.svg';
   deleteButtonImg.alt = 'Del';
@@ -62,51 +61,46 @@ const createNewTaskElement = function(taskString){
   return listItem;
 }
 
-
-
 const addTask = function(){
-    console.log('Add Task...');
-    //Create a new list item with the text from the #new-task:
-    if (!taskInput.value) return;
-    const listItem = createNewTaskElement(taskInput.value);
+  console.log('Add Task...');
+  //Create a new list item with the text from the #new-task:
+  if (!taskInput.value) return;
+  const listItem = createNewTaskElement(taskInput.value);
 
-    //Append listItem to incompleteTaskHolder
-    incompleteTaskHolder.appendChild(listItem);
-    bindTaskEvents(listItem, taskCompleted);
+  //Append listItem to incompleteTaskHolder
+  incompleteTaskHolder.appendChild(listItem);
+  bindTaskEvents(listItem, taskCompleted);
 
-    taskInput.value = '';
-
+  taskInput.value = '';
 }
 
 //Edit an existing task.
 
 const editTask = function(){
-    console.log('Edit Task...');
-    console.log('Change "edit" to "save"');
+  console.log('Edit Task...');
+  console.log('Change "edit" to "save"');
 
+  const listItem = this.parentNode;
 
-    const listItem = this.parentNode;
+  const editInput = listItem.querySelector('.item__input');
+  const label = listItem.querySelector('.item__label');
+  const editBtn = listItem.querySelector('.button_edit');
+  const containsClass = listItem.classList.contains('list__item_edit');
+  //If class of the parent is .editmode
+  if(containsClass){
 
-    const editInput = listItem.querySelector('item__input');
-    const label = listItem.querySelector('item__label');
-    const editBtn = listItem.querySelector('.button_edit');
-    const containsClass = listItem.classList.contains('list__item_edit');
-    //If class of the parent is .editmode
-    if(containsClass){
-
-        //switch to .editmode
-        //label becomes the inputs value.
-        label.innerText = editInput.value;
-        editBtn.innerText = 'Edit';
+    //switch to .editmode
+    //label becomes the inputs value.
+    label.innerText = editInput.value;
+    editBtn.innerText = 'Edit';
     }else{
-        editInput.value = label.innerText;
-        editBtn.innerText = 'Save';
+      editInput.value = label.innerText;
+      editBtn.innerText = 'Save';
     }
 
-    //toggle .editmode on the parent.
-    listItem.classList.toggle('list__item_edit');
+  //toggle .editmode on the parent.
+  listItem.classList.toggle('list__item_edit');
 };
-
 
 //Delete task.
 const deleteTask = function(){
@@ -119,7 +113,6 @@ const deleteTask = function(){
 
 }
 
-
 //Mark task completed
 const taskCompleted = function(){
     console.log('Complete Task...');
@@ -128,9 +121,7 @@ const taskCompleted = function(){
     const listItem = this.parentNode;
     completedTasksHolder.appendChild(listItem);
     bindTaskEvents(listItem, taskIncomplete);
-
 }
-
 
 const taskIncomplete = function(){
     console.log('Incomplete Task...');
@@ -141,8 +132,6 @@ const taskIncomplete = function(){
     incompleteTaskHolder.appendChild(listItem);
     bindTaskEvents(listItem,taskCompleted);
 }
-
-
 
 const ajaxRequest = function(){
     console.log('AJAX Request');
@@ -164,7 +153,6 @@ const bindTaskEvents = function(taskListItem,checkBoxEventHandler){
     const editButton = taskListItem.querySelector('.button_edit');
     const deleteButton = taskListItem.querySelector('.button_del');
 
-
     //Bind editTask to edit button.
     editButton.onclick = editTask;
     //Bind deleteTask to delete button.
@@ -175,23 +163,17 @@ const bindTaskEvents = function(taskListItem,checkBoxEventHandler){
 
 //cycle over incompleteTaskHolder ul list items
 //for each list item
-for (const i = 0; i<incompleteTaskHolder.children.length;i++){
+for (let i = 0; i < incompleteTaskHolder.children.length; i++){
 
     //bind events to list items chldren(tasksCompleted)
     bindTaskEvents(incompleteTaskHolder.children[i],taskCompleted);
 }
 
-
-
-
 //cycle over completedTasksHolder ul list items
-for (const i = 0; i<completedTasksHolder.children.length;i++){
+for (let i = 0; i < completedTasksHolder.children.length; i++){
     //bind events to list items chldren(tasksIncompleted)
     bindTaskEvents(completedTasksHolder.children[i],taskIncomplete);
 }
-
-
-
 
 // Issues with usability don't get seen until they are in front of a human tester.
 
